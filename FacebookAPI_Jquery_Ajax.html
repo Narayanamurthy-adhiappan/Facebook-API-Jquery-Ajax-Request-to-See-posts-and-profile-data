@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">        
+
+<script>
+$(document).ready(function(){
+	var FB_data;
+	var access_token;
+	$("#loader").hide();
+	$("#info").addClass("hidden");
+    $('#FB_Acess_token').click(function(){
+		access_token = $('#FB_token').val();
+		if(access_token == "")
+			$('#require').text("Data require");
+		else{
+			$('#FB_token').val("");
+			$('#require').text("");
+			$.ajax({
+				type : 'GET',
+				url: "https://graph.facebook.com/me?access_token="+access_token,
+				beforeSend: function(){
+					$("#loader").show();
+				},
+				complete: function(){
+					$("#loader").hide();
+				},
+				success:function(data){
+					profile(data);
+				},
+				error: function(error){
+					alert("Error loading page......."+error);
+				}
+			
+		
+			});
+			$("#getToken").addClass("hidden");
+			$("#info").removeClass("hidden");
+		}
+	
+	});
+	$("#profile").on("click", function(){
+		$.ajax({
+			type : 'GET',
+				url: "https://graph.facebook.com/me?access_token="+access_token,
+				beforeSend: function(){
+					$("#loader").show();
+				},
+				complete: function(){
+					$("#loader").hide();
+				},
+				success:function(data){
+					profile(data);
+				},
+				error: function(error){
+					alert("Error loading page......."+error);
+				},
+				timeout: 3000
+		});
+	});
+	$("#post").on("click", function(){
+		$.ajax({
+			type : 'GET',
+				url: "https://graph.facebook.com/me/feed?access_token="+access_token,
+				beforeSend: function(){
+					$("#loader").show();
+				},
+				complete: function(){
+					$('#loader').hide();
+				},
+				success:function(data){
+					post(data);
+				},
+				error: function(error){
+					alert("Error loading page......."+error);
+				},
+				timeout: 3000
+		});
+	});
+	$("#backToToken").click(function(){
+			$("#getToken").removeClass("hidden");
+			$("#info").addClass("hidden");
+	});
+	var profile = function(data){
+		$("#listProfileInfo").empty();
+		$("#listPostInfo").empty();
+		$.each(data, function(key, value){
+			if(typeof value === 'object'){
+				var appendList = "<li>"+key+ "->"+ "<ul>";
+				$.each(value, function(key1, value1){
+					$.each(value1, function(key2, value2){
+						appendList = appendList + "<li>"+key2 + "->"+ value2 +"</li>";
+					}) ;
+				});
+				appendList = appendList + "</ul>";
+				$("#listProfileInfo").append(appendList);
+			}
+			else
+				$("#listProfileInfo").append("<li>"+key+ "->"+ value +"</li>");
+		});
+		
+				
+	}
+	var post = function(data){
+		$("#listProfileInfo").empty();
+		$("#listPostInfo").empty();
+		
+		var length = data["data"]["length"];
+		
+		for (var i = 0; i< length; i++){
+			if (data["data"][i]["type"] == "photo")
+				photo(data["data"][i]);
+			if (data["data"][i]["type"] == "video")
+				video(data["data"][i]);
+			if (data["data"][i]["type"] == "status")
+				status(data["data"][i]);
+			if (data["data"][i]["type"] == "link")
+				link(data["data"][i]);
+		}
+		
+		
+	}
+	var status = function(data){
+		var appendList = "<div class = 'col s12 m6 l6'><div class='card'> <div class='card-image'>";
+		
+		if(data["picture"] != undefined)
+			appendList = appendList + "<img src="+ data["picture"] + " class='responsive-img'/>"
+		if(data["story"] != undefined)
+			appendList = "<span class='card-title'>" + appendList + data["story"] + "</span>";
+		if(data["message"] != undefined)
+			appendList = "<span class='card-title'>" + appendList + data["message"] + "</span>";
+		appendList = appendList + "</div>";
+		
+		if(data["description"] != undefined)
+			appendList = appendList + "<div class='card-content'><p>" + data["description"] + "</p></div>";
+		
+		if(data["created_time"] != undefined)
+           appendList = appendList + "<div class='card-action'><a href='#'>" + data["created_time"] + "</a></div>";
+		$("#listPostInfo").append(appendList + "</div></div>");
+	}
+	var photo = function(data){
+		var appendList = "<div class = 'col s12 m6 l6'><div class='card'> <div class='card-image'>";
+		
+		if(data["picture"] != undefined)
+			appendList = appendList + "<img src="+ data["picture"] + " class='responsive-img'/>"
+		if(data["story"] != undefined)
+			appendList = "<span class='card-title'>" + appendList + data["story"] + "</span>";
+		if(data["message"] != undefined)
+			appendList = "<span class='card-title'>" + appendList + data["message"] + "</span>";
+		appendList = appendList + "</div>";
+		
+		if(data["description"] != undefined)
+			appendList = appendList + "<div class='card-content'><p>" + data["description"] + "</p></div>";
+		
+		if(data["created_time"] != undefined)
+           appendList = appendList + "<div class='card-action'><a href='#'>" + data["created_time"] + "</a></div>";
+		$("#listPostInfo").append(appendList + "</div></div>");
+	}
+	var video = function(data){
+		var appendList = "<div class = 'col s12 m6 l6'><div class='card'> <div class='card-image'>";
+		
+		if(data["picture"] != undefined)
+			appendList = appendList + "<img src="+ data["picture"] + " class='responsive-img'/>"
+		if(data["story"] != undefined)
+			appendList = "<span class='card-title'>" + appendList + data["story"] + "</span>";
+		if(data["message"] != undefined)
+			appendList = "<span class='card-title'>" + appendList + data["message"] + "</span>";
+		appendList = appendList + "</div>";
+		
+		if(data["description"] != undefined)
+			appendList = appendList + "<div class='card-content'><p>" + data["description"] + "</p></div>";
+		
+		if(data["created_time"] != undefined)
+           appendList = appendList + "<div class='card-action'><a href='#'>" + data["created_time"] + "</a></div>";
+		$("#listPostInfo").append(appendList + "</div></div>");
+	}
+	var link = function(data){	
+		var appendList = "<div class = 'col s12 m6 l6'><div class='card'> <div class='card-image'>";
+		
+		if(data["picture"] != undefined)
+			appendList = appendList + "<img src="+ data["picture"] + " class='responsive-img'/>"
+		if(data["story"] != undefined)
+			appendList = "<span class='card-title'>" + appendList + data["story"] + "</span>";
+		if(data["message"] != undefined)
+			appendList = "<span class='card-title'>" + appendList + data["message"] + "</span>";
+		appendList = appendList + "</div>";
+		
+		if(data["description"] != undefined)
+			appendList = appendList + "<div class='card-content'><p>" + data["description"] + "</p></div>";
+		
+		if(data["created_time"] != undefined)
+           appendList = appendList + "<div class='card-action'><a href='#'>" + data["created_time"] + "</a></div>";
+		$("#listPostInfo").append(appendList + "</div></div>");
+	}
+		
+});
+</script>
+<style>
+
+
+p{
+	font-size: 18px;
+	font-style: bold;
+}
+.cust_head{
+	font-size: 24px;
+}
+.require{
+		font-size: 10px;
+}
+.hidden{
+	display: none;
+}
+.display{
+	display: block
+}
+#loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 80px;
+  height: 80px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+</style>
+</head>
+<body>
+<div class = "row">
+	<div class = "col s12 m12 l12 indigo-text accent-2 center-align hoverable" style = "padding: 15px 5px;border: 1px solid grey"><span class = "cust_head">JQuery AJax to Show your Facebook Information Using Facebook Graph API</styele></div>
+</div>
+ <div class="row center-align" id = "getToken">
+	
+	<div class = "col s12 m6 l6 push-m3 push-l3">
+		<div class = "indigo accent-2"><p style = "color: white;">Copy and Paste your Facebook Access Token</p></div>
+	</div>
+    <form class="col s12 m12 l12 ">
+      <div class="row ">
+        <div class="input-field col s12 m6 l6 push-m3 push-l3">
+          <i class="material-icons prefix">mode_edit</i>
+          <input id="FB_token" type="text" class="validate">
+          <label for="FB_token">Facebook Access Token</label>
+		  <span id = "require" style = "color: red"></span>
+        </div>
+      </div>
+    </form>
+	<div class = "col s12 m6 l6 push-m3 push-l3">
+		<button class="btn waves-effect waves-light indigo accent-2" type="submit" name="action" id = "FB_Acess_token">Submit
+			<i class="material-icons right">send</i>
+		</button>
+	</div>
+	
+ </div>
+ <div class = "divider"></div>
+ <div id = "info">
+ <div class = "row">
+	<div class = "col s6 m6 l6 indigo accent-2 white-text" style = "padding: 10px; border: 2px solid white" id = "profile">Profile Page</div>
+	<div class = "col s6 m6 l6 indigo accent-2 white-text" style = "padding: 10px; border: 2px solid white" id = "post">My Post</div>
+ </div>
+ 
+ <div class = "row">
+	<div class = "col s6 m6 l6 center-align push-m5 push-l5">	
+		<div id="loader"></div>
+	</div>
+ </div>
+ <div class = "row" id = "my_profile">    
+	 <div id = "listProfileInfo" class = "row">
+	 </div>
+ </div> 
+
+
+ <div class = "row" id = "my_post">   
+	<div id = "listPostInfo" class = "row">
+	 </div> 
+</div> 
+<div class = "row">
+	<div class = "col s12 m6 l6 push-m4 push-l4">
+			<button class="btn waves-effect waves-light indigo accent-2" type="submit" name="action" id = "backToToken">Access Other Profile
+				<i class="material-icons right">open_in_browser</i>
+			</button>
+	</div>
+</div>
+</div>
+
+ 
+</body>
+</html>
