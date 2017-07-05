@@ -90,21 +90,24 @@ $(document).ready(function(){
 	var profile = function(data){
 		$("#listProfileInfo").empty();
 		$("#listPostInfo").empty();
-		$.each(data, function(key, value){
-			if(typeof value === 'object'){
-				var appendList = "<li>"+key+ "->"+ "<ul>";
-				$.each(value, function(key1, value1){
-					$.each(value1, function(key2, value2){
-						appendList = appendList + "<li>"+key2 + "->"+ value2 +"</li>";
-					}) ;
-				});
-				appendList = appendList + "</ul>";
-				$("#listProfileInfo").append(appendList);
-			}
-			else
-				$("#listProfileInfo").append("<li>"+key+ "->"+ value +"</li>");
-		});
-		
+		var appendList = "<table class = 'striped centered'>";
+		if(data["name"] != undefined)
+			appendList = appendList + "<tr><td><b>Name</b></td><td>"+data["name"]+"</td></tr>";
+		if(data["bio"] != undefined)
+			appendList = appendList + "<tr><td><b>Bio</b></td><td>"+data["bio"]+"</td></tr>";
+		if(data["birthday"] != undefined)
+			appendList = appendList + "<tr><td><b>Birthday</b></td><td>"+data["birthday"]+"</td></tr>";
+		if(data["email"] != undefined)
+			appendList = appendList + "<tr><td><b>E-mail</b></td><td>"+data["email"]+"</td></tr>";	
+		if(data["gender"] != undefined)
+			appendList = appendList + "<tr><td><b>Gender</b></td><td>"+data["gender"]+"</td></tr>";
+		if(data["hometown"]["name"] != undefined)
+			appendList = appendList + "<tr><td><b>Hometown</b></td><td>"+data["hometown"]["name"]+"</td></tr>";
+		if(data["relationship_status"] != undefined)
+			appendList = appendList + "<tr><td><b>Relationship Status</b></td><td>"+data["relationship_status"]+"</td></tr>";
+		if(data["quotes"] != undefined)
+			appendList = appendList + "<tr><td><b>Quotes</b></td><td>"+data["quotes"]+"</td></tr>";
+		$("#listProfileInfo").append(appendList + "</table>")
 				
 	}
 	var post = function(data){
@@ -141,7 +144,7 @@ $(document).ready(function(){
 			appendList = appendList + "<div class='card-content'><p>" + data["description"] + "</p></div>";
 		
 		if(data["created_time"] != undefined)
-           appendList = appendList + "<div class='card-action'><a href='#'>" + data["created_time"] + "</a></div>";
+           appendList = appendList + "<div class='card-action'>Created On : <a href='#'>" + new Date(data["created_time"]) + "</a></div>";
 		$("#listPostInfo").append(appendList + "</div></div>");
 	}
 	var photo = function(data){
@@ -159,14 +162,14 @@ $(document).ready(function(){
 			appendList = appendList + "<div class='card-content'><p>" + data["description"] + "</p></div>";
 		
 		if(data["created_time"] != undefined)
-           appendList = appendList + "<div class='card-action'><a href='#'>" + data["created_time"] + "</a></div>";
+           appendList = appendList + "<div class='card-action'>Created On : <a href='#'>" + new Date(data["created_time"]) + "</a></div>";
 		$("#listPostInfo").append(appendList + "</div></div>");
 	}
 	var video = function(data){
 		var appendList = "<div class = 'col s12 m6 l6'><div class='card'> <div class='card-image'>";
 		
 		if(data["picture"] != undefined)
-			appendList = appendList + "<img src="+ data["picture"] + " class='responsive-img'/>"
+			appendList = appendList + "<img src="+ data["picture"] + " />"
 		if(data["story"] != undefined)
 			appendList = "<span class='card-title'>" + appendList + data["story"] + "</span>";
 		if(data["message"] != undefined)
@@ -177,14 +180,14 @@ $(document).ready(function(){
 			appendList = appendList + "<div class='card-content'><p>" + data["description"] + "</p></div>";
 		
 		if(data["created_time"] != undefined)
-           appendList = appendList + "<div class='card-action'><a href='#'>" + data["created_time"] + "</a></div>";
+           appendList = appendList + "<div class='card-action'>Created On : <a href='#'>" + new Date(data["created_time"]) + "</a></div>";
 		$("#listPostInfo").append(appendList + "</div></div>");
 	}
 	var link = function(data){	
 		var appendList = "<div class = 'col s12 m6 l6'><div class='card'> <div class='card-image'>";
 		
 		if(data["picture"] != undefined)
-			appendList = appendList + "<img src="+ data["picture"] + " class='responsive-img'/>"
+			appendList = appendList + "<img src="+ data["picture"] + " />"
 		if(data["story"] != undefined)
 			appendList = "<span class='card-title'>" + appendList + data["story"] + "</span>";
 		if(data["message"] != undefined)
@@ -195,7 +198,7 @@ $(document).ready(function(){
 			appendList = appendList + "<div class='card-content'><p>" + data["description"] + "</p></div>";
 		
 		if(data["created_time"] != undefined)
-           appendList = appendList + "<div class='card-action'><a href='#'>" + data["created_time"] + "</a></div>";
+           appendList = appendList + "<div class='card-action'>Created On : <a href='#'>" + new Date(data["created_time"]) + "</a></div>";
 		$("#listPostInfo").append(appendList + "</div></div>");
 	}
 		
@@ -203,17 +206,6 @@ $(document).ready(function(){
 </script>
 <style>
 
-
-p{
-	font-size: 18px;
-	font-style: bold;
-}
-.cust_head{
-	font-size: 24px;
-}
-.require{
-		font-size: 10px;
-}
 .hidden{
 	display: none;
 }
@@ -229,15 +221,89 @@ p{
   -webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
 }
-
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }
   100% { -webkit-transform: rotate(360deg); }
 }
-
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+
+@media screen and (max-width: 480px){
+p{
+	font-size: 12px;
+	font-style: bold;
+}
+.cust_head{
+	font-size: 16px;
+}
+.require{
+		font-size: 8px;
+}
+#profile{
+		font-size: 14px;
+}
+#post{
+		font-size: 14px;
+}
+#listProfileInfo{
+	font-size: 12px;
+}
+#listPostInfo{
+	font-size: 12px;
+}
+}
+
+@media screen and (min-width: 481px) and (max-width: 700px){ 
+p{
+	font-size: 14px;
+	font-style: bold;
+}
+.cust_head{
+	font-size: 20px;
+}
+.require{
+		font-size: 8px;
+}
+#profile{
+		font-size: 16px;
+}
+#post{
+		font-size: 16px;
+}
+#listProfileInfo{
+	font-size: 14px;
+}
+#listPostInfo{
+	font-size: 14px;
+}
+}
+
+@media screen and (min-width: 700px){
+p{
+	font-size: 18px;
+	font-style: bold;
+}
+.cust_head{
+	font-size: 24px;
+}
+.require{
+		font-size: 10px;
+}
+#profile{
+		font-size: 18px;
+}
+#post{
+		font-size: 18px;
+}
+#listProfileInfo{
+	font-size: 16px;
+}
+#listPostInfo{
+	font-size: 16px;
+}
 }
 
 </style>
@@ -291,14 +357,16 @@ p{
 	 </div> 
 </div> 
 <div class = "row">
-	<div class = "col s12 m6 l6 push-m4 push-l4">
+	<div class = "col s12 m4 l4"></div>
+	<div class = "col s12 m4 l4">
 			<button class="btn waves-effect waves-light indigo accent-2" type="submit" name="action" id = "backToToken">Access Other Profile
 				<i class="material-icons right">open_in_browser</i>
 			</button>
 	</div>
+	<div class = "col s12 m4 l4"></div>
 </div>
 </div>
 
- 
+
 </body>
 </html>
