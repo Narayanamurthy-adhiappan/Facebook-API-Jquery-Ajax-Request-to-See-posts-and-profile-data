@@ -101,7 +101,7 @@ $(document).ready(function(){
 			appendList = appendList + "<tr><td><b>E-mail</b></td><td>"+data["email"]+"</td></tr>";	
 		if(data["gender"] != undefined)
 			appendList = appendList + "<tr><td><b>Gender</b></td><td>"+data["gender"]+"</td></tr>";
-		if(data["hometown"]["name"] != undefined)
+		if(data["hometown"] != undefined)
 			appendList = appendList + "<tr><td><b>Hometown</b></td><td>"+data["hometown"]["name"]+"</td></tr>";
 		if(data["relationship_status"] != undefined)
 			appendList = appendList + "<tr><td><b>Relationship Status</b></td><td>"+data["relationship_status"]+"</td></tr>";
@@ -119,12 +119,14 @@ $(document).ready(function(){
 		for (var i = 0; i< length; i++){
 			if (data["data"][i]["type"] == "photo")
 				photo(data["data"][i]);
-			if (data["data"][i]["type"] == "video")
+			else if (data["data"][i]["type"] == "video")
 				video(data["data"][i]);
-			if (data["data"][i]["type"] == "status")
+			else if (data["data"][i]["type"] == "status")
 				status(data["data"][i]);
-			if (data["data"][i]["type"] == "link")
+			else if (data["data"][i]["type"] == "link")
 				link(data["data"][i]);
+			else
+				photo(data["data"][i]);
 		}
 		
 		
@@ -342,9 +344,11 @@ p{
  </div>
  
  <div class = "row">
-	<div class = "col s6 m6 l6 center-align push-m5 push-l5">	
+	<div class = "col s4 m4 l4 center-align"></div>
+	<div class = "col s4 m4 l4 center-align">	
 		<div id="loader"></div>
 	</div>
+	<div class = "col s4 m4 l4 center-align"></div>
  </div>
  <div class = "row" id = "my_profile">    
 	 <div id = "listProfileInfo" class = "row">
@@ -357,13 +361,13 @@ p{
 	 </div> 
 </div> 
 <div class = "row">
-	<div class = "col s12 m4 l4"></div>
-	<div class = "col s12 m4 l4">
+	
+	<div class = "col s12 m12 l12 center-align">
 			<button class="btn waves-effect waves-light indigo accent-2" type="submit" name="action" id = "backToToken">Access Other Profile
 				<i class="material-icons right">open_in_browser</i>
 			</button>
 	</div>
-	<div class = "col s12 m4 l4"></div>
+	
 </div>
 </div>
 
